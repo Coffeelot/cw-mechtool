@@ -8,7 +8,7 @@ The repo includes one item, an [OBD scanner](https://rollr.io/blog/what-obd-scan
 Made for OX inventory, QB might work also but we have no idea if it does cause we're too lazy to try. You can change which inventory it uses in the config
 
 # Preview 📽
-[![YOUTUBE VIDEO](http://img.youtube.com/vi/aAG3tMogf04/0.jpg)](https://youtu.be/aAG3tMogf04)
+[![YOUTUBE VIDEO](http://img.youtube.com/vi/H5hmJkF5dtI/0.jpg)](https://youtu.be/H5hmJkF5dtI)
 
 # Developed by Coffeelot and Wuggie
 [More scripts by us](https://github.com/stars/Coffeelot/lists/cw-scripts)  👈
