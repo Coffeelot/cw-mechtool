@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
+
+:root {
+    --primary-color: #ff4603 ;
+    --primary-color-light: #ffa303;
+    --primary-color-dark: #c30000;
+    --primary: linear-gradient(131deg, var(--primary-color) 0%, var(--primary-color-light) 100%);
+    --secondary-color: #90aeff;
+    --secondary-color-light: #5d7fcb;
+    --secondary-color-dark: #c4e0ff;
+    --positive-color: #66bb6a;
+    --negative-color:  #c62828;
+    --background-color: #1C1C21;
+    --background-color-lighter: #36363e;
+    --background-color-dark: #1f1f24;
+    --background: linear-gradient(131deg, var(--background-color) 0%, var(--background-color-lighter) 100%);
+    --shadow: hsl(0, 3%, 6%);
+    --text-color: #ffffff;
+    --text-color-disabled: #dcdcdc;
+    --accent-color: #c0392b;
+    --border-radius: 0px;
+}
+
+body {
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;    
+    color: var(--text-color);
+}
+
+.obd-container {
+    display: flex;
+    justify-content: center;
+    height: 95vh;
+    margin-left: 10em;
+    margin-right: 10em;
+}
+
+.obd-content {
+    z-index: 200;
+    width: 1000px;
+    height: fit-content;
+    margin-bottom: 1em;
+    background-color: var(--background-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.obd-content-header {
+    margin-top: 0.1em;
+    text-align: center;
+    font-weight: 500;
+    font-size: 2em;
+    width: 100%;
+}
+.obd-content-subheader {
+    margin-top: 0.1em;
+    text-align: center;
+    font-weight: 500;
+    font-size: 1.2em;
+    width: 100%;
+}
+
+
+.obd-content-items {
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    display: flex;
+}
+
+.obd-content-items :first {
+    border-bottom: 1px solid var(--background-color-lighter);
+}
+
+.obd-items-left {
+    flex-grow: 1;
+    width: 50%;
+    border-right: 1px solid var(--background-color-lighter);
+}
+
+.obd-items-right {
+    flex-grow: 1;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: xxx-large;
+    font-weight: bold;
+}
+
+.obd-details-left {
+    flex-grow: 1;
+    width: 50%;
+    border-right: 1px solid var(--background-color-lighter);
+}
+
+.obd-details-right {
+    flex-grow: 1;
+    width: 50%;
+}
+
+.score-list-row {
+    display: flex;
+    flex-direction: row;
+    gap:0.2em;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
