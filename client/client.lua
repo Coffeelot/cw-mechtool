@@ -1,6 +1,8 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local useDebug = Config.Debug
 local obdIsOpen = false
+local isMechanic = false
+local usingObd = false
 
 local function openOBDMenu()
     exports['qb-menu']:openMenu({{
@@ -12,6 +14,7 @@ local function openOBDMenu()
             icon = "fas fa-wrench",
             params = {
                 event = "cw-mechtool:client:openTuning",
+                args = { fromObd = true}
             }
         }, { -- RENZU STANCER
             header = "Stancer menu",
@@ -38,14 +41,15 @@ local function fetchVehicleData()
                 class = class,
                 performanceScore = performanceScore,
                 vehicleModel = vehicleModel,
-                vehicleBrand = vehicleBrand
+                vehicleBrand = vehicleBrand,
+                usingObd = usingObd
             })
         else
             QBCore.Functions.Notify("Not close to a vehicle", 'error')
             obdIsOpen = false
             SendNUIMessage({
                 action = "cwobd",
-                toggle = false
+                toggle = false,
             })
         end
     else
@@ -53,7 +57,7 @@ local function fetchVehicleData()
         obdIsOpen = false
         SendNUIMessage({
             action = "cwobd",
-            toggle = false
+            toggle = false,
         })
     end
     if obdIsOpen then
@@ -63,19 +67,20 @@ local function fetchVehicleData()
     end
 end
 
-local function setOBDOpen(bool)
+local function setOBDOpen(bool, fromObd)
     obdIsOpen = bool
     if obdIsOpen then
+        usingObd = fromObd
         fetchVehicleData()
     end
     SendNUIMessage({
         action = "cwobd",
-        toggle = obdIsOpen
+        toggle = obdIsOpen,
     })
 end
 
-RegisterNetEvent('cw-mechtool:client:openTuning', function()
-    setOBDOpen(not obdIsOpen)
+RegisterNetEvent('cw-mechtool:client:openTuning', function(data)
+    setOBDOpen(not obdIsOpen, data.fromObd)
 end)
 
 RegisterNUICallback('exitObd', function(_, cb)

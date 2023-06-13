@@ -121,6 +121,7 @@ function addDetailsRows (details) {
 
     $(".obd-details-left").html('');
     $(".obd-details-right").html('');
+    $(".obd-content-subheader").html('Details')
 
     $(".obd-details-left").append(suspensionForce);
     $(".obd-details-left").append(suspensionDamp);
@@ -129,6 +130,12 @@ function addDetailsRows (details) {
     $(".obd-details-right").append(highGrip);  
     $(".obd-details-right").append(offroadGripLoss);  
     $(".obd-details-right").append(camberStiffness);
+}
+
+function removeDetailsRows () {
+    $(".obd-content-subheader").html('')
+    $(".obd-details-left").html('');
+    $(".obd-details-right").html('');
 }
 
 obd.Update = function(data) {
@@ -140,7 +147,12 @@ obd.Update = function(data) {
     const vehicleBrand = data.vehicleBrand;
     $(".obd-content-header").html(vehicleBrand + ' ' + vehicleModel);
     addScoreRows(scores)
-    addDetailsRows(details)
+
+    if (data.usingObd) {
+        addDetailsRows(details)
+    } else {
+        removeDetailsRows()
+    }
 
     const classScore = `<span>${vehicleClass}${performanceScore}</span>`
     $(".obd-items-right").html(classScore);
