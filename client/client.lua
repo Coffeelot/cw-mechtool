@@ -5,13 +5,23 @@ local isMechanic = false
 local usingObd = false
 
 local function openOBDMenu()
-    exports['qb-menu']:openMenu({{
+    local options = {
+        {
             header = "Mechanic Menu",
             isMenuHeader = true
+        }, { -- CW tuning menu.
+            header = "Check car parts",
+            txt = "",
+            icon = "fas fa-screwdriver",
+            hidden = not Config.UseTuning,
+            params = {
+                event = "cw-tuning:client:openTuningMenu",
+            }
         }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
             header = "Toggle tuning overlay",
             txt = "",
             icon = "fas fa-wrench",
+            hidden = not Config.UsePerformance,
             params = {
                 event = "cw-mechtool:client:openTuning",
                 args = { fromObd = true}
@@ -20,17 +30,35 @@ local function openOBDMenu()
             header = "Stancer menu",
             txt = "",
             icon = "far fa-futbol",
+            hidden = not Config.UseRenzuStancer,
             params = {
                 event = "cw-mechtool:client:openStancer",
             }
-        },
-    })
+        }, { -- Vehicleswap
+            header = "List Vehicle Swaps",
+            txt = "Under construction.",
+            icon = "fas fa-recycle",
+            hidden = not Config.UseVehicleSwap,
+            params = {
+                event = "cw-mechtool:client:getSwaps",
+            }
+        }
+    }
+
+    exports['qb-menu']:openMenu(options)
 end
 
 local function fetchVehicleData()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle()
     if vehicle and distance then 
         if distance < 5 then
+            if Config.UseTuning then 
+                if not Entity(vehicle).state.workedOn then
+                    exports['cw-tuning']:doVehicleCheck(vehicle)
+                else
+                    Wait(2000)
+                end
+            end
             local score, class, performanceScore, vehicleModel, vehicleBrand = exports['cw-performance']:getVehicleInfo(vehicle)
             local details = exports['cw-performance']:getVehicleDetails(vehicle)
 
@@ -101,4 +129,8 @@ RegisterNetEvent('cw-mechtool:client:openMechanicMenu', function()
         end
 
     end)
+end)
+
+RegisterNetEvent('cw-mechtool:client:getSwaps', function()
+    exports['cw-vehicleswap']:listSwaps()
 end)
