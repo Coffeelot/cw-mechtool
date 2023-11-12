@@ -5,47 +5,92 @@ local isMechanic = false
 local usingObd = false
 
 local function openOBDMenu()
-    local options = {
-        {
-            header = "Mechanic Menu",
-            isMenuHeader = true
-        }, { -- CW tuning menu.
-            header = "Check car parts",
-            txt = "",
-            icon = "fas fa-screwdriver",
-            hidden = not Config.UseTuning,
-            params = {
-                event = "cw-tuning:client:openTuningMenu",
+    if Config.Menu == "ox" then
+        local Options = {
+        }
+        if Config.UseTuning then
+            Options[#Options+1] = {  -- CW tuning menu.
+                title = 'Check car parts',
+                description = '',
+                icon = 'fas fa-screwdriver',
+                event = 'cw-tuning:client:openTuningMenu',
             }
-        }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
-            header = "Toggle tuning overlay",
-            txt = "",
-            icon = "fas fa-wrench",
-            hidden = not Config.UsePerformance,
-            params = {
-                event = "cw-mechtool:client:openTuning",
-                args = { fromObd = true}
+        end
+        if Config.UsePerformance then
+            Options[#Options+1] = {  -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
+                title = 'Toggle tuning overlay',
+                description = '',
+                icon = 'fas fa-wrench',
+                event = 'cw-mechtool:client:openTuning',
+                args = { fromObd = true},
             }
-        }, { -- RENZU STANCER
-            header = "Stancer menu",
-            txt = "",
-            icon = "far fa-futbol",
-            hidden = not Config.UseRenzuStancer,
-            params = {
-                event = "cw-mechtool:client:openStancer",
+        end
+        if Config.UseRenzuStancer then
+            Options[#Options+1] = { -- RENZU STANCER
+                title = 'Stancer menu',
+                description = '',
+                icon = 'far fa-futbol',
+                event = 'cw-mechtool:client:openStancer',
             }
-        }, { -- Vehicleswap
-            header = "List Vehicle Swaps",
-            txt = "Under construction.",
-            icon = "fas fa-recycle",
-            hidden = not Config.UseVehicleSwap,
-            params = {
-                event = "cw-mechtool:client:getSwaps",
+        end
+        if Config.UseVehicleSwap then
+            Options[#Options+1] = { -- Vehicleswap
+                title = 'List Vehicle Swaps',
+                description = '',
+                icon = 'fas fa-recycle',
+                event = 'cw-mechtool:client:getSwaps',
+            }
+        end
+
+        lib.registerContext({
+            id = 'cw_mechtool',
+            title = 'Mechanic Menu',
+            options = Options
+        })
+        lib.showContext('cw_mechtool')
+    elseif Config.Menu == "qb" then
+        local options = {
+            {
+                header = "Mechanic Menu",
+                isMenuHeader = true
+            }, { -- CW tuning menu.
+                header = "Check car parts",
+                txt = "",
+                icon = "fas fa-screwdriver",
+                hidden = not Config.UseTuning,
+                params = {
+                    event = "cw-tuning:client:openTuningMenu",
+                }
+            }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
+                header = "Toggle tuning overlay",
+                txt = "",
+                icon = "fas fa-wrench",
+                hidden = not Config.UsePerformance,
+                params = {
+                    event = "cw-mechtool:client:openTuning",
+                    args = { fromObd = true}
+                }
+            }, { -- RENZU STANCER
+                header = "Stancer menu",
+                txt = "",
+                icon = "far fa-futbol",
+                hidden = not Config.UseRenzuStancer,
+                params = {
+                    event = "cw-mechtool:client:openStancer",
+                }
+            }, { -- Vehicleswap
+                header = "List Vehicle Swaps",
+                txt = "Under construction.",
+                icon = "fas fa-recycle",
+                hidden = not Config.UseVehicleSwap,
+                params = {
+                    event = "cw-mechtool:client:getSwaps",
+                }
             }
         }
-    }
 
-    exports['qb-menu']:openMenu(options)
+        exports['qb-menu']:openMenu(options)
+    end
 end
 
 local function fetchVehicleData()
