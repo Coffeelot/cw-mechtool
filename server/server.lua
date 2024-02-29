@@ -1,7 +1,7 @@
 local QBCore = exports['qb-core']:GetCoreObject() 
 local useDebug = Config.Debug
 
-if Config.Inventory then
+if Config.Inventory == 'ox' then
     if useDebug then print("^2 OxInventory is enabled for MechTool") end
     AddEventHandler('ox_inventory:usedItem', function(playerId, name, slotId, metadata)
         if name == Config.ObdItem then
