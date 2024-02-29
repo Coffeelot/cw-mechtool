@@ -1,51 +1,123 @@
-local QBCore = exports['qb-core']:GetCoreObject()
 local useDebug = Config.Debug
+local QBCore = exports['qb-core']:GetCoreObject()
 local obdIsOpen = false
 local isMechanic = false
 local usingObd = false
 
-local function openOBDMenu()
-    local options = {
-        {
-            header = "Mechanic Menu",
-            isMenuHeader = true
-        }, { -- CW tuning menu.
-            header = "Check car parts",
-            txt = "",
-            icon = "fas fa-screwdriver",
-            hidden = not Config.UseTuning,
-            params = {
-                event = "cw-tuning:client:openTuningMenu",
-            }
-        }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
-            header = "Toggle tuning overlay",
-            txt = "",
-            icon = "fas fa-wrench",
-            hidden = not Config.UsePerformance,
-            params = {
-                event = "cw-mechtool:client:openTuning",
-                args = { fromObd = true}
-            }
-        }, { -- RENZU STANCER
-            header = "Stancer menu",
-            txt = "",
-            icon = "far fa-futbol",
-            hidden = not Config.UseRenzuStancer,
-            params = {
-                event = "cw-mechtool:client:openStancer",
-            }
-        }, { -- Vehicleswap
-            header = "List Vehicle Swaps",
-            txt = "Under construction.",
-            icon = "fas fa-recycle",
-            hidden = not Config.UseVehicleSwap,
-            params = {
-                event = "cw-mechtool:client:getSwaps",
-            }
+local function getPlayerJob()
+    local groups = {}
+    local jobTable = {}
+    if GetResourceState("qb-core") == "started" then
+        groups = QBCore.Functions.GetPlayerData().job
+        jobTable.name = groups.name
+        jobTable.type = groups.type
+        jobTable.grade = groups.grade.level
+    elseif GetResourceState("ox_core") == "started" then
+        groups = exports.ox_core.GetPlayerData()?.groups
+        for k, v in pairs(groups) do
+            jobTable.name = k
+            jobTable.grade = v
+            jobTable.type = k -- hack for ox core not having type? maybe?
+        end
+    end
+    return jobTable
+end
+
+local function notify(text, type)
+    if Config.OxLib then
+        lib.notify({
+            title = text,
+            type = type,
+        })
+    else 
+        QBCore.Functions.Notify(text, type)
+    end
+end
+
+local qbOptions = {
+    {
+        header = "Mechanic Menu",
+        isMenuHeader = true
+    }, { -- CW tuning menu.
+        header = "Check car parts",
+        txt = "",
+        icon = "fas fa-screwdriver",
+        hidden = not Config.UseTuning,
+        params = {
+            event = "cw-tuning:client:openTuningMenu",
+        }
+    }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
+        header = "Toggle tuning overlay",
+        txt = "",
+        icon = "fas fa-wrench",
+        hidden = not Config.UsePerformance,
+        params = {
+            event = "cw-mechtool:client:openTuning",
+            args = { fromObd = true}
+        }
+    }, { -- RENZU STANCER
+        header = "Stancer menu",
+        txt = "",
+        icon = "far fa-futbol",
+        hidden = not Config.UseRenzuStancer,
+        params = {
+            event = "cw-mechtool:client:openStancer",
+        }
+    }, { -- Vehicleswap
+        header = "List Vehicle Swaps",
+        txt = "Under construction.",
+        icon = "fas fa-recycle",
+        hidden = not Config.UseVehicleSwap,
+        params = {
+            event = "cw-mechtool:client:getSwaps",
         }
     }
+}
 
-    exports['qb-menu']:openMenu(options)
+local oxOptions = {
+    { -- CW tuning menu.
+        title = "Check car parts",
+        description = "",
+        icon = "fas fa-screwdriver",
+        hidden = not Config.UseTuning,
+        event = "cw-tuning:client:openTuningMenu",
+    }, { -- CW Performnace overlay. REQUIRES LATEST VERSION MAYBE??
+        title = "Toggle tuning overlay",
+        description = "",
+        icon = "fas fa-wrench",
+        hidden = not Config.UsePerformance,
+        event = "cw-mechtool:client:openTuning",
+        args = { fromObd = true}
+    }, { -- RENZU STANCER
+        title = "Stancer menu",
+        description = "",
+        icon = "far fa-futbol",
+        hidden = not Config.UseRenzuStancer,
+        event = "cw-mechtool:client:openStancer",
+    }, { -- Vehicleswap
+        title = "List Vehicle Swaps",
+        description = "Under construction.",
+        icon = "fas fa-recycle",
+        hidden = not Config.UseVehicleSwap,
+        event = "cw-mechtool:client:getSwaps",
+    }
+}
+
+if Config.OxLib then
+    lib.registerContext({
+        id = 'mechtool_menu',
+        title = 'Mechanic Menu',
+        menu = 'mechtool_menu',
+        options = oxOptions
+    })
+end
+
+local function openOBDMenuQB()
+    exports['qb-menu']:openMenu(qbOptions)
+end
+
+local function openOBDMenuOx()
+    lib.showContext('mechtool_menu')
 end
 
 local function fetchVehicleData()
@@ -73,7 +145,7 @@ local function fetchVehicleData()
                 usingObd = usingObd
             })
         else
-            QBCore.Functions.Notify("Not close to a vehicle", 'error')
+            notify("Not close to a vehicle", 'error')
             obdIsOpen = false
             SendNUIMessage({
                 action = "cwobd",
@@ -81,7 +153,7 @@ local function fetchVehicleData()
             })
         end
     else
-        QBCore.Functions.Notify("Not close to a vehicle", 'error')
+        notify("Not close to a vehicle", 'error')
         obdIsOpen = false
         SendNUIMessage({
             action = "cwobd",
@@ -120,15 +192,17 @@ RegisterNetEvent('cw-mechtool:client:openStancer', function()
 end)
 
 RegisterNetEvent('cw-mechtool:client:openMechanicMenu', function()
-    QBCore.Functions.GetPlayerData(function(PlayerData)
-        TriggerEvent('animations:client:EmoteCommandStart', {"keyfob"})
-        if PlayerData.job.type == 'mechanic' then
-            openOBDMenu()
+    local job = getPlayerJob()
+    TriggerEvent('animations:client:EmoteCommandStart', {"keyfob"})
+    if job.type == 'mechanic' then
+        if Config.OxLib then
+            openOBDMenuOx()
         else
-            QBCore.Functions.Notify("You're not a mechanic", 'error')
+            openOBDMenuQB()
         end
-
-    end)
+    else
+        notify("You're not a mechanic", 'error')
+    end
 end)
 
 RegisterNetEvent('cw-mechtool:client:getSwaps', function()
