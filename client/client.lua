@@ -120,6 +120,16 @@ local function openOBDMenuOx()
     lib.showContext('mechtool_menu')
 end
 
+local function getVehicleFromVehList(hash)
+    for _, v in pairs(QBCore.Shared.Vehicles) do
+		if hash == joaat(v.hash) then
+			return v.name, v.brand
+		end
+	end
+    print('^1It seems like you have not added your vehicle ('..GetDisplayNameFromVehicleModel(hash)..') to the vehicles.lua')
+    return 'model not found', 'brand not found'
+end
+
 local function fetchVehicleData()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle()
     if vehicle and distance then 
@@ -131,7 +141,8 @@ local function fetchVehicleData()
                     Wait(2000)
                 end
             end
-            local score, class, performanceScore, vehicleModel, vehicleBrand = exports['cw-performance']:getVehicleInfo(vehicle)
+            local score, class, performanceScore = exports['cw-performance']:getVehicleInfo(vehicle)
+            local vehicleModel, vehicleBrand = getVehicleFromVehList(GetEntityModel(vehicle))
             local details = exports['cw-performance']:getVehicleDetails(vehicle)
 
             SendNUIMessage({
