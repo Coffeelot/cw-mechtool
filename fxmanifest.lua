@@ -13,7 +13,7 @@ files {
 
 shared_scripts {
     'config.lua',
-    -- '@ox_lib/init.lua', -- uncomment if you want oxlib
+    '@ox_lib/init.lua', -- remove this line if you're not a using oxlib
 }
 
 client_scripts{

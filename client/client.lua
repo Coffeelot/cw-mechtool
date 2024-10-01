@@ -1,7 +1,5 @@
-local useDebug = Config.Debug
 local QBCore = exports['qb-core']:GetCoreObject()
 local obdIsOpen = false
-local isMechanic = false
 local usingObd = false
 
 local function getPlayerJob()
