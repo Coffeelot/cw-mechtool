@@ -1,7 +1,6 @@
 # Mechanic Tool 🤳🔧
 
-### **See the script in action on [Sundown RP](https://discord.gg/CZNh8kcSGK) 🌆**
-A companion tool for [CW-PERFORMANCE](https://github.com/Coffeelot/cw-performance). This is what we use on Sundown as the go to mechanic tool and used for some other stuff. Mainly used for enabling a performance overlay (and opening renzu stancer if you use that). You can toggle if the script requires jobs to be used in the config.
+This is what we use on Sundown as the go to mechanic tool and used for some other stuff. Mainly used for enabling a performance overlay (and opening renzu stancer if you use that). You can toggle if the script requires jobs to be used in the config.
 
 The repo includes one item, an [OBD scanner](https://rollr.io/blog/what-obd-scanner-why-you-need-one/#:~:text=Auto%20mechanics%20are%20able%20to,or%20change%20in%20oxygen%20levels) (you can rename this and change it to whatever that matches in the Config). Two extra images are included if you want variants, but the Inventory stuff isn't included here. We use them as loot + tool for hotwiring modern cars. You can figure that out yourself. 
 
@@ -21,6 +20,9 @@ Made for OX inventory, QB might work also but we have no idea if it does cause w
 <a href="https://discord.gg/FJY4mtjaKr"> <img src="https://media.discordapp.net/attachments/1202695794537537568/1285652389080334337/discord.png?ex=66eb0c97&is=66e9bb17&hm=b1b2c17715f169f57cf646bb9785b0bf833b2e4037ef47609100ec8e902371df&=&format=webp" width="200"></a>
 
 
+### If you want to support what we do, you can buy us a coffee here:
+
+[![Buy Us a Coffee](https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg)](https://www.buymeacoffee.com/cwscriptbois )
 
 # Setup 🔧
 
@@ -44,7 +46,6 @@ This one has a degrade of about 2 weeks. So users will need to buy new ones
 		weight = 100,
 		stack = true,
 		close = false,
-		allowArmed = true,
 		description = "A tool used by mechanics to diagnose vehicles"
 	},
 ```
